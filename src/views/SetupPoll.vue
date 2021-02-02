@@ -24,7 +24,12 @@
         </MDBCol>
       </MDBRow>
       <MDBCol col="12" class="d-flex flex-row-reverse align-items-end">
-        <MDBBtn size="lg" tag="a" href="#/vote" color="primary" class="my-3" v-on:click="postPoll"
+        <MDBBtn
+          size="lg"
+          tag="a"
+          color="primary"
+          class="my-3"
+          v-on:click="postPoll"
           >New Poll</MDBBtn
         >
       </MDBCol>
@@ -34,7 +39,7 @@
 
 <script>
 import axios from "axios";
-
+import router from "../router/index";
 import {
   MDBContainer,
   MDBInput,
@@ -60,32 +65,43 @@ export default {
   },
   data: function () {
     return {
-      Title: '',
-      MovieList: '',
-      NumberOfVotes: 1
-    }
-  },
-  setup() {
-    // const Title = ref("");
-    // const MovieList = ref("");
-    // const NumberOfVotes = ref("");
-    // return {
-    //   Title,
-    //   MovieList,
-    //   NumberOfVotes,
-    // };
+      Title: "",
+      MovieList: "",
+      NumberOfVotes: 1,
+      pollId: 0,
+    };
   },
   methods: {
     postPoll: function () {
-      console.log(this.getMovies())
-      axios.post('https:localhost:3000/pollPage', {
-        pollName: this.Title,
-        MovieList: this.getMovies()
-      });
+      console.log(this.getMovies());
+      axios
+        .post("http://localhost:3000/pollPage", {
+          pollName: this.Title,
+          MovieList: this.getMovies(),
+          numberofPeopleVoted: 0,
+          maxVotes: this.NumberOfVotes
+          
+        })
+        .then((result) => {
+          console.log(result);
+          this.pollId = result.data._id;
+          router.push("/vote/" + this.pollId);
+        });
     },
-    getMovies: function() {
-      return this.MovieList.split('\n');
-    }
+    getMovies: function () {
+      const data = this.MovieList.split("\n");
+      let returnData = [];
+      for (let i in data) {
+        let item = data[i];
+
+        returnData.push({
+          movies: item,
+          votes: 0,
+        });
+      }
+
+      return returnData;
+    },
   },
 };
 </script>

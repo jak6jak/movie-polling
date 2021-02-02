@@ -1,8 +1,8 @@
 <template>
   <div id="nav">
-    <router-link to="/">Setup</router-link> |
+    <!-- <router-link to="/">Setup</router-link> |
     <router-link to="/Vote">Vote</router-link> |
-    <router-link to="/Results">Results</router-link>
+    <router-link to="/Results">Results</router-link> -->
   </div>
   <router-view/>
 </template>

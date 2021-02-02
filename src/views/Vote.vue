@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <Movies :Movies="['Mulan', 'Toy Story 2']" :MaxVotes="2"/>
+    <Movies/>
   </div>
 </template>
 

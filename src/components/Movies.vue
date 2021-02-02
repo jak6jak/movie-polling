@@ -40,7 +40,14 @@
           <h4>Remaining Votes: {{ MaxVotes - numberOfSelectedMovies }}</h4>
         </MDBCol>
         <MDBCol class="d-flex flex-row-reverse">
-          <MDBBtn size="lg" color="primary" href="#/Results" tag="a">Submit</MDBBtn>
+          <MDBBtn
+            size="lg"
+            color="primary"
+            :href="`#/Results/${$route.params.id}`"
+            tag="a"
+            @click="submitVotes(MovieData)"
+            >Submit</MDBBtn
+          >
         </MDBCol>
       </MDBRow>
     </div>
@@ -52,6 +59,8 @@
 <script>
 import { ref, onMounted } from "vue";
 import { MDBCol, MDBRow, MDBContainer, MDBCard, MDBBtn } from "mdb-vue-ui-kit";
+import { useRoute } from "vue-router";
+import axios from "axios";
 export default {
   name: "Posts",
   // props: {
@@ -84,16 +93,33 @@ export default {
         this.numberOfSelectedMovies--;
       }
     },
+    async submitVotes(MovieData) {
+      let MovieNames = [];
+      console.log(MovieData);
+      MovieData.forEach((element) => {
+        if (element.selected == true) {
+          MovieNames.push(element.movieId);
+        }
+      });
+      await axios.patch(
+        `http://localhost:3000/pollPage/${this.$route.params.id}`,
+        {
+          movieList: MovieNames,
+        }
+      );
+    },
   },
-  setup(props) {
+  setup() {
     const data = ref(null);
     const loading = ref(true);
     const error = ref(null);
     let MovieData = ref([]);
+    let Movies = ref([]);
+    const route = useRoute();
+    let MaxVotes = ref(1);
 
-    function fetchData(query) {
+    function fetchData(query, movieId) {
       let request = new XMLHttpRequest();
-
       request.open(
         "GET",
         `https://api.themoviedb.org/3/search/movie?api_key=3326e0bbf4e3afc78d9ca480466d90fa&language=en-US&query=${query}&page=1&include_adult=false`,
@@ -102,8 +128,28 @@ export default {
 
       request.onload = function () {
         data.value = JSON.parse(this.response);
-        // console.log(data.value);
-        MovieData.value.push({ data: data.value.results[0], selected: false });
+        console.log(data.value);
+        let found = false;
+        for (let i = 0; i < data.value.results.length; i++) {
+          if (data.value.results[i].title.toUpperCase() === query.toUpperCase()) {
+            MovieData.value.push({
+              data: data.value.results[i],
+              selected: false,
+              movieId: movieId
+
+            });
+            found = true;
+            break;
+          }
+        }
+
+        if (!found) {
+          MovieData.value.push({
+            data: { title: query, overview: "Movie was not found in database" },
+            selected: false,
+            movieId: movieId
+          });
+        }
         // console.log(MovieData);
         loading.value = false;
       };
@@ -112,15 +158,29 @@ export default {
     }
 
     onMounted(() => {
-      props.Movies.forEach((element) => {
-        fetchData(element);
-      });
+      axios
+        .get(`http://localhost:3000/pollPage/${route.params.id}`)
+        .then((response) => {
+          console.log(response);
+          Movies.value = response.data.movieList;
+          MaxVotes.value = response.data.maxVotes;
+          console.log(MaxVotes.value);
+
+          Movies.value.forEach((element) => {
+            console.log(element);
+            if (element.movies != "") {
+              fetchData(element.movies, element._id);
+            }
+          });
+        });
     });
 
     return {
       MovieData,
       loading,
       error,
+      Movies,
+      MaxVotes,
     };
   },
 };
