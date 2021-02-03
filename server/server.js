@@ -3,6 +3,8 @@ const express = require('express');
 const server = express();
 const cors = require('cors');
 const enableWs = require('express-ws');
+const history = require('connect-history-api-fallback');
+const serveStatic = require('serve-static');
 enableWs(server);
 
 const mongoose = require('mongoose');
@@ -13,9 +15,12 @@ db.once('open', () => console.log('Connected to Database!'))
 
 server.use(express.json());
 server.use(cors());
+server.use(history());
 
 const router = require('./pollPage');
 server.use('/pollPage', router);
+
+server.use(serveStatic('../dist'))
 
 server.ws('/Results/:id', function(ws) {
     ws.on('message', function(msg) {
