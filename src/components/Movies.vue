@@ -43,7 +43,6 @@
           <MDBBtn
             size="lg"
             color="primary"
-            :href="`#/Results/${$route.params.id}`"
             tag="a"
             @click="submitVotes(MovieData)"
             >Submit</MDBBtn
@@ -59,7 +58,8 @@
 <script>
 import { ref, onMounted } from "vue";
 import { MDBCol, MDBRow, MDBContainer, MDBCard, MDBBtn } from "mdb-vue-ui-kit";
-import { useRoute } from "vue-router";
+import { useRoute} from "vue-router";
+import router from "../router/index";
 import axios from "axios";
 export default {
   name: "Posts",
@@ -102,7 +102,10 @@ export default {
         {
           movieList: MovieNames,
         }
-      );
+      ).then(()=> {
+        router.push({name: 'Results', params: {id: this.$route.params.id}})
+      });
+
     },
   },
   setup() {

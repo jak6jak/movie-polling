@@ -2,6 +2,7 @@
   <h1>Results</h1>
   <h2>Number Voted: {{ NumberVoted }}</h2>
   <ul>
+    <div v-if="!loading">
     <div v-for="item in sortList(Movies)" :key="item._id">
       <MDBCard class="mb-1">
         <MDBRow>
@@ -14,6 +15,7 @@
         </MDBRow>
       </MDBCard>
     </div>
+    </div>
   </ul>
 </template>
 
@@ -21,6 +23,7 @@
 import { onMounted, ref } from "vue";
 import axios from "axios";
 import { useRoute } from "vue-router";
+
 import { MDBCard, MDBRow, MDBCol } from "mdb-vue-ui-kit";
 
 export default {
@@ -28,15 +31,24 @@ export default {
   components: {
     MDBCard,
     MDBRow,
-    MDBCol
+    MDBCol,
   },
 
   setup() {
     const Movies = ref([]);
     const NumberVoted = ref(0);
+    const loading = ref(true);
     onMounted(() => {
       const route = useRoute();
 
+      axios
+        .get(`http://localhost:3000/pollpage/${route.params.id}`)
+        .then((response) => {
+          console.log(response);
+          Movies.value = response.data.movieList;
+          NumberVoted.value = response.data.numberofPeopleVoted;
+          loading.value = false;
+        });
       let socket = new WebSocket(
         `ws:localhost:3000/Results/${route.params.id}`
       );
@@ -47,19 +59,13 @@ export default {
 
       socket.onmessage = function (event) {
         console.log(`[message] Data received from server: ${event.data}`);
-        axios
-          .get(`http://localhost:3000/pollpage/${route.params.id}`)
-          .then((response) => {
-            console.log(response);
-            Movies.value = response.data.movieList;
-            NumberVoted.value = response.data.numberofPeopleVoted;
-          });
       };
     });
 
     return {
       Movies,
       NumberVoted,
+      loading
     };
   },
   methods: {
