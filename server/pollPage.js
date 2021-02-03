@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
 const Poll = require('./poll')
+const axios = require('axios');
 
 router.get('/', async (req, res) => {
     try {
@@ -10,6 +11,18 @@ router.get('/', async (req, res) => {
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
+})
+
+router.get('/fetchMovie/:query', async (req, res) => {
+        axios.get(`https://api.themoviedb.org/3/search/movie?api_key=${process.env.TMD_API_KEY}&language=en-US&query=${req.params.query}&page=1&include_adult=false`)
+        .then(response => {
+            res.status(200).json(response.data);
+        })
+        .catch(err => {
+            console.log(err.message);
+            res.status(500).json({message: err.message})
+        })
+    
 })
 
 router.get('/:id', async (req, res) => {

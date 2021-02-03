@@ -63,10 +63,6 @@ import { useRoute } from "vue-router";
 import axios from "axios";
 export default {
   name: "Posts",
-  // props: {
-  //   Movies: Array,
-  //   MaxVotes: Number,
-  // },
   components: {
     MDBCol,
     MDBRow,
@@ -119,42 +115,43 @@ export default {
     let MaxVotes = ref(1);
 
     function fetchData(query, movieId) {
-      let request = new XMLHttpRequest();
-      request.open(
-        "GET",
-        `https://api.themoviedb.org/3/search/movie?api_key=3326e0bbf4e3afc78d9ca480466d90fa&language=en-US&query=${query}&page=1&include_adult=false`,
-        true
-      );
-
-      request.onload = function () {
-        data.value = JSON.parse(this.response);
-        console.log(data.value);
-        let found = false;
-        for (let i = 0; i < data.value.results.length; i++) {
-          if (data.value.results[i].title.toUpperCase() === query.toUpperCase()) {
-            MovieData.value.push({
-              data: data.value.results[i],
-              selected: false,
-              movieId: movieId
-
-            });
-            found = true;
-            break;
+      axios
+        .get(`http://localhost:3000/pollPage/fetchMovie/${query}`)
+        .then((response) => {
+          console.log(response);
+          data.value = response.data;
+          let found = false;
+          for (let i = 0; i < data.value.results.length; i++) {
+            if (
+              data.value.results[i].title.toUpperCase() === query.toUpperCase()
+            ) {
+              MovieData.value.push({
+                data: data.value.results[i],
+                selected: false,
+                movieId: movieId,
+              });
+              found = true;
+              break;
+            }
           }
-        }
 
-        if (!found) {
-          MovieData.value.push({
-            data: { title: query, overview: "Movie was not found in database" },
-            selected: false,
-            movieId: movieId
-          });
-        }
-        // console.log(MovieData);
-        loading.value = false;
-      };
-
-      request.send();
+          if (!found) {
+            MovieData.value.push({
+              data: {
+                title: query,
+                overview: "Movie was not found in database",
+              },
+              selected: false,
+              movieId: movieId,
+            });
+          }
+          // console.log(MovieData);
+          loading.value = false;
+          console.log(movieId);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
 
     onMounted(() => {
