@@ -75,7 +75,7 @@ export default {
     postPoll: function () {
       console.log(this.getMovies());
       axios
-        .post("http://localhost:3000/pollPage", {
+        .post("http://https://movie-polling-gqlg4.ondigitalocean.app/#/pollPage", {
           pollName: this.Title,
           MovieList: this.getMovies(),
           numberofPeopleVoted: 0,
