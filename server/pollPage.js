@@ -46,6 +46,7 @@ router.post('/', async (req, res) => {
         const newPoll = await poll.save();
         res.status(201).json(newPoll);
     } catch (err) {
+        console.log(err.message);
         res.status(400).json({ message: err.message });
     }
 })
