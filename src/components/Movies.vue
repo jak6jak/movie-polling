@@ -159,7 +159,7 @@ export default {
 
     onMounted(() => {
       axios
-        .get(`http://localhost:3000/pollPage/${route.params.id}`)
+        .get(`http://movienightpoll.com:3000/pollPage/${route.params.id}`)
         .then((response) => {
           console.log(response);
           Movies.value = response.data.movieList;
