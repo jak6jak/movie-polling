@@ -61,6 +61,8 @@ import { MDBCol, MDBRow, MDBContainer, MDBCard, MDBBtn } from "mdb-vue-ui-kit";
 import { useRoute } from "vue-router";
 import router from "../router/index";
 import axios from "axios";
+axios.defaults.baseURL = process.env.APP_URL
+
 export default {
   name: "Posts",
   components: {
@@ -120,7 +122,7 @@ export default {
 
     function fetchData(query, movieId) {
       axios
-        .get(`https://localhost:3000/pollPage/fetchMovie/${query}`)
+        .get(`/pollPage/fetchMovie/${query}`)
         .then((response) => {
           console.log(response);
           data.value = response.data;
@@ -160,7 +162,7 @@ export default {
 
     onMounted(() => {
       axios
-        .get(`http://movienightpoll.com:3000/pollPage/${route.params.id}`)
+        .get(`/pollPage/${route.params.id}`)
         .then((response) => {
           console.log(response);
           Movies.value = response.data.movieList;

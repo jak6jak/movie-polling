@@ -22,6 +22,7 @@
 <script>
 import { onMounted, ref } from "vue";
 import axios from "axios";
+axios.defaults.baseURL = process.env.APP_URL
 import { useRoute } from "vue-router";
 
 import { MDBCard, MDBRow, MDBCol } from "mdb-vue-ui-kit";
@@ -42,7 +43,7 @@ export default {
       const route = useRoute();
 
       axios
-        .get(`https://localhost:3000/pollpage/${route.params.id}`)
+        .get(`/pollpage/${route.params.id}`)
         .then((response) => {
           console.log(response);
           Movies.value = response.data.movieList;
