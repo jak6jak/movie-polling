@@ -58,7 +58,7 @@
 <script>
 import { ref, onMounted } from "vue";
 import { MDBCol, MDBRow, MDBContainer, MDBCard, MDBBtn } from "mdb-vue-ui-kit";
-import { useRoute} from "vue-router";
+import { useRoute } from "vue-router";
 import router from "../router/index";
 import axios from "axios";
 export default {
@@ -97,15 +97,16 @@ export default {
           MovieNames.push(element.movieId);
         }
       });
-      await axios.patch(
-        `http://localhost:3000/pollPage/${this.$route.params.id}`,
-        {
+      await axios
+        .patch(`https://localhost:3000/pollPage/${this.$route.params.id}`, {
           movieList: MovieNames,
-        }
-      ).then(()=> {
-        router.push({name: 'Results', params: {id: this.$route.params.id}})
-      });
-
+        })
+        .then(() => {
+          router.push({
+            name: "Results",
+            params: { id: this.$route.params.id },
+          });
+        });
     },
   },
   setup() {
@@ -119,7 +120,7 @@ export default {
 
     function fetchData(query, movieId) {
       axios
-        .get(`http://localhost:3000/pollPage/fetchMovie/${query}`)
+        .get(`https://localhost:3000/pollPage/fetchMovie/${query}`)
         .then((response) => {
           console.log(response);
           data.value = response.data;

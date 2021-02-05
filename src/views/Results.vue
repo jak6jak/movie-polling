@@ -42,7 +42,7 @@ export default {
       const route = useRoute();
 
       axios
-        .get(`http://localhost:3000/pollpage/${route.params.id}`)
+        .get(`https://localhost:3000/pollpage/${route.params.id}`)
         .then((response) => {
           console.log(response);
           Movies.value = response.data.movieList;
