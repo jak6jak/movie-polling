@@ -100,7 +100,7 @@ export default {
         }
       });
       await axios
-        .patch(`https://localhost:3000/pollPage/${this.$route.params.id}`, {
+        .patch(`/pollPage/${this.$route.params.id}`, {
           movieList: MovieNames,
         })
         .then(() => {

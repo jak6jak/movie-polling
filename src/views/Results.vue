@@ -3,18 +3,18 @@
   <h2>Number Voted: {{ NumberVoted }}</h2>
   <ul>
     <div v-if="!loading">
-    <div v-for="item in sortList(Movies)" :key="item._id">
-      <MDBCard class="mb-1">
-        <MDBRow>
-          <MDBCol>
-            <h1>{{ item.movies }}</h1>
-          </MDBCol>
-          <MDBCol>
-            <h2>{{ item.votes }}</h2>
-          </MDBCol>
-        </MDBRow>
-      </MDBCard>
-    </div>
+      <div v-for="item in sortList(Movies)" :key="item._id">
+        <MDBCard class="mb-1">
+          <MDBRow>
+            <MDBCol>
+              <h1>{{ item.movies }}</h1>
+            </MDBCol>
+            <MDBCol>
+              <h2>{{ item.votes }}</h2>
+            </MDBCol>
+          </MDBRow>
+        </MDBCard>
+      </div>
     </div>
   </ul>
 </template>
@@ -22,7 +22,7 @@
 <script>
 import { onMounted, ref } from "vue";
 import axios from "axios";
-axios.defaults.baseURL = process.env.APP_URL
+axios.defaults.baseURL = process.env.APP_URL;
 import { useRoute } from "vue-router";
 
 import { MDBCard, MDBRow, MDBCol } from "mdb-vue-ui-kit";
@@ -42,31 +42,29 @@ export default {
     onMounted(() => {
       const route = useRoute();
 
-      axios
-        .get(`/pollpage/${route.params.id}`)
-        .then((response) => {
-          console.log(response);
-          Movies.value = response.data.movieList;
-          NumberVoted.value = response.data.numberofPeopleVoted;
-          loading.value = false;
-        });
-      let socket = new WebSocket(
-        `ws:localhost:3000/Results/${route.params.id}`
-      );
-      socket.onopen = function () {
-        console.log("Connection established!");
-        socket.send("My name is " + route.params.id);
-      };
+      axios.get(`/pollpage/${route.params.id}`).then((response) => {
+        console.log(response);
+        Movies.value = response.data.movieList;
+        NumberVoted.value = response.data.numberofPeopleVoted;
+        loading.value = false;
+      });
+      // let socket = new WebSocket(
+      //   `ws:localhost:3000/Results/${route.params.id}`
+      // );
+      // socket.onopen = function () {
+      //   console.log("Connection established!");
+      //   socket.send("My name is " + route.params.id);
+      // };
 
-      socket.onmessage = function (event) {
-        console.log(`[message] Data received from server: ${event.data}`);
-      };
+      // socket.onmessage = function (event) {
+      //   console.log(`[message] Data received from server: ${event.data}`);
+      // };
     });
 
     return {
       Movies,
       NumberVoted,
-      loading
+      loading,
     };
   },
   methods: {
