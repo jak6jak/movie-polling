@@ -14,15 +14,15 @@ router.get('/', async (req, res) => {
 })
 
 router.get('/fetchMovie/:query', async (req, res) => {
-        axios.get(`https://api.themoviedb.org/3/search/movie?api_key=${process.env.TMD_API_KEY}&language=en-US&query=${req.params.query}&page=1&include_adult=false`)
+    axios.get(`https://api.themoviedb.org/3/search/movie?api_key=${process.env.TMD_API_KEY}&language=en-US&query=${req.params.query}&page=1&include_adult=false`)
         .then(response => {
             res.status(200).json(response.data);
         })
         .catch(err => {
             console.log(err.message);
-            res.status(500).json({message: err.message})
+            res.status(500).json({ message: err.message })
         })
-    
+
 })
 
 router.get('/:id', async (req, res) => {
@@ -53,26 +53,27 @@ router.post('/', async (req, res) => {
 
 router.patch('/:id', async (req, res) => {
     console.log(req.body);
-    const objectIDArray = req.body.movieList.map(s => mongoose.Types.ObjectId(s))
-    console.log(mongoose.Types.ObjectId.isValid(objectIDArray[0]));
-    try {
-        const doc = await Poll.findById(req.params.id);
-        doc.numberofPeopleVoted += 1;
+    if (req.body.movieList.length > 0) {
+        const objectIDArray = req.body.movieList.map(s => mongoose.Types.ObjectId(s))
+        try {
+            const doc = await Poll.findById(req.params.id);
+            doc.numberofPeopleVoted += 1;
 
-        objectIDArray.forEach(element => {
-            for (let i = 0; i < doc.movieList.length; i++) {
-                if (doc.movieList[i]._id.equals(element)) {
-                    doc.movieList[i].votes += 1;
-                    break;
+            objectIDArray.forEach(element => {
+                for (let i = 0; i < doc.movieList.length; i++) {
+                    if (doc.movieList[i]._id.equals(element)) {
+                        doc.movieList[i].votes += 1;
+                        break;
+                    }
                 }
-            }
-        });
-        console.log(doc);
-        await doc.save();
-        res.status(201).json(doc);
-    } catch (err) {
-        console.log(err.message);
-        res.status(500).json({ message: err.message })
+            });
+            console.log(doc);
+            await doc.save();
+            res.status(201).json(doc);
+        } catch (err) {
+            console.log(err.message);
+            res.status(500).json({ message: err.message })
+        }
     }
 })
 

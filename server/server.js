@@ -23,11 +23,4 @@ server.use('/pollPage', router);
 
 server.use(serveStatic('../dist'))
 
-server.ws('/Results/:id', function(ws) {
-    ws.on('message', function(msg) {
-
-        ws.send(msg);
-    })
-})
-
 server.listen(process.env.PORT || 3000, () => console.log("server started!"))

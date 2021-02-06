@@ -1,19 +1,21 @@
 <template>
-  <h1>Results</h1>
-  <h2>Number Voted: {{ NumberVoted }}</h2>
+  <h1 class="logo">
+    <b><span>Re</span><span>su</span><span>lts</span></b>
+  </h1>
+  <h2 class="title has-text-white">Number Voted: {{ NumberVoted }}</h2>
   <ul>
     <div v-if="!loading">
       <div v-for="item in sortList(Movies)" :key="item._id">
-        <MDBCard class="mb-1">
-          <MDBRow>
-            <MDBCol>
-              <h1>{{ item.movies }}</h1>
-            </MDBCol>
-            <MDBCol>
-              <h2>{{ item.votes }}</h2>
-            </MDBCol>
-          </MDBRow>
-        </MDBCard>
+        <div class="box container mb-3">
+          <div class="columns">
+            <div class="column">
+              <h1 class="title">{{ item.movies }}</h1>
+            </div>
+            <div class="column">
+              <h2 class="title">{{ item.votes }}</h2>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </ul>
@@ -25,15 +27,8 @@ import axios from "axios";
 axios.defaults.baseURL = process.env.APP_URL;
 import { useRoute } from "vue-router";
 
-import { MDBCard, MDBRow, MDBCol } from "mdb-vue-ui-kit";
-
 export default {
   name: "Results",
-  components: {
-    MDBCard,
-    MDBRow,
-    MDBCol,
-  },
 
   setup() {
     const Movies = ref([]);
@@ -48,17 +43,6 @@ export default {
         NumberVoted.value = response.data.numberofPeopleVoted;
         loading.value = false;
       });
-      // let socket = new WebSocket(
-      //   `ws:localhost:3000/Results/${route.params.id}`
-      // );
-      // socket.onopen = function () {
-      //   console.log("Connection established!");
-      //   socket.send("My name is " + route.params.id);
-      // };
-
-      // socket.onmessage = function (event) {
-      //   console.log(`[message] Data received from server: ${event.data}`);
-      // };
     });
 
     return {
@@ -83,6 +67,51 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+.logo b {
+  font: 400 19vh "Vibur";
+  color: rgb(253, 235, 197);
+  text-shadow: 0 -40px 100px, 0 0 2px, 0 0 1em #eeaf02, 0 0 0.5em #a89152,
+    0 0 0.1em #c4b63d, 0 10px 3px #000;
+}
+.logo b span {
+  animation: blink linear infinite 2s;
+}
+.logo b span:nth-of-type(2) {
+  animation: blink linear infinite 3s;
+}
+
+@keyframes blink {
+  78% {
+    color: inherit;
+    text-shadow: inherit;
+  }
+  79% {
+    color: #333;
+  }
+  80% {
+    text-shadow: none;
+  }
+  81% {
+    color: inherit;
+    text-shadow: inherit;
+  }
+  82% {
+    color: #333;
+    text-shadow: none;
+  }
+  83% {
+    color: inherit;
+    text-shadow: inherit;
+  }
+  92% {
+    color: #333;
+    text-shadow: none;
+  }
+  92.5% {
+    color: inherit;
+    text-shadow: inherit;
+  }
+}
 </style>>
 
