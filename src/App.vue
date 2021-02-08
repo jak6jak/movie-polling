@@ -21,8 +21,8 @@ html {
 }
 
 body{
-  background: rgb(0, 0, 0) url(assets/Background.jpg) center repeat-y;
-  background-size: cover;
+  background: rgb(0, 0, 0) url(assets/Background.jpg) center repeat;
+  background-size: auto;
   margin: 0px;
 
 }

@@ -3,16 +3,18 @@
     <span class="icon">
       <i class="fas fa-share"></i>
     </span>
-    <span> Share </span>
+    <span> Copy Link </span>
   </button>
 </template>
 
 <script>
+import { toast } from "bulma-toast";
+
 export default {
   name: "share",
   methods: {
     copyUrl() {
-      console.log("hello0");
+      this.displayToast();
       const el = document.createElement("textarea");
       el.value = window.location.href;
       el.setAttribute("readonly", "");
@@ -30,6 +32,16 @@ export default {
         document.getSelection().removeAllRanges();
         document.getSelection().addRange(selected);
       }
+    },
+
+    displayToast() {
+      toast({
+        message: "Copied link to clipboard!",
+        type: "is-primary",
+        position: "top-center",
+        dismissible: true,
+        pauseOnHover: false,
+      });
     },
   },
 };

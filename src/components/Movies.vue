@@ -44,19 +44,19 @@
           </div>
         </div>
       </div>
-      <div class="level">
-        <div class="level-left">
-          <div class="level-item">
-            <h4 class="subtitle is-4 has-text-white">
+      <div class="navbar is-fixed-bottom">
+        <div class="navbar-start">
+          <div class="navbar-item">
+            <h4 class="subtitle is-4">
               Remaining Votes: {{ MaxVotes - numberOfSelectedMovies }}
             </h4>
           </div>
         </div>
-        <div class="level-right">
-          <div class="level-item">
+        <div class="navbar-end">
+          <div class="navbar-item">
             <share />
           </div>
-          <div class="level-item">
+          <div class="navbar-item">
             <button class="button" @click="submitVotes(MovieData)">
               Submit
             </button>
@@ -219,6 +219,9 @@ p {
   background-color: #f0f0f0;
 }
 
+.navbar {
+  background-color: #f0f0f0;
+}
 .logo b {
   font: 400 19vh "Vibur";
   color: rgb(253, 235, 197);
