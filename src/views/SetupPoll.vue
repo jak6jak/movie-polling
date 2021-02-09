@@ -58,7 +58,7 @@ export default {
   },
   methods: {
     postPoll: function () {
-      console.log(this.getMovies());
+      console.log(process.env.APP_URL)
       axios
         .post("pollPage", {
           pollName: this.Title,
