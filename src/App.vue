@@ -3,6 +3,7 @@
   <br/>
   <footer class="footer">
     <p class="title is-4 has-text-white">Created by Jacob Edie</p>
+    <p>Made with ❤️ on <a href="https://github.com/jak6jak/movie-polling">Github</a></p>
   </footer>
 </template>
 
@@ -19,7 +20,10 @@ html {
   background-color: #2c3e50;
   overflow: hidden;
 }
-
+p a {
+  color: white;
+  text-decoration: underline;
+}
 body{
   background: rgb(0, 0, 0) url(assets/Background.jpg) center repeat;
   background-size: auto;

@@ -1,7 +1,5 @@
 <template>
-  <h1 class="logo">
-    <b><span>Re</span><span>su</span><span>lts</span></b>
-  </h1>
+  <Logo text="Results"/>
   <h2 class="title has-text-white">Number Voted: {{ NumberVoted }}</h2>
   <ul>
     <div v-if="!loading">
@@ -22,6 +20,7 @@
 </template>
 
 <script>
+import Logo from '../components/Logo'
 import { onMounted, ref } from "vue";
 import axios from "axios";
 axios.defaults.baseURL = process.env.APP_URL;
@@ -29,7 +28,9 @@ import { useRoute } from "vue-router";
 
 export default {
   name: "Results",
-
+  components: {
+    Logo
+  },
   setup() {
     const Movies = ref([]);
     const NumberVoted = ref(0);
@@ -68,50 +69,5 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.logo b {
-  font: 400 19vh "Vibur";
-  color: rgb(253, 235, 197);
-  text-shadow: 0 -40px 100px, 0 0 2px, 0 0 1em #eeaf02, 0 0 0.5em #a89152,
-    0 0 0.1em #c4b63d, 0 10px 3px #000;
-}
-.logo b span {
-  animation: blink linear infinite 2s;
-}
-.logo b span:nth-of-type(2) {
-  animation: blink linear infinite 3s;
-}
-
-@keyframes blink {
-  78% {
-    color: inherit;
-    text-shadow: inherit;
-  }
-  79% {
-    color: #333;
-  }
-  80% {
-    text-shadow: none;
-  }
-  81% {
-    color: inherit;
-    text-shadow: inherit;
-  }
-  82% {
-    color: #333;
-    text-shadow: none;
-  }
-  83% {
-    color: inherit;
-    text-shadow: inherit;
-  }
-  92% {
-    color: #333;
-    text-shadow: none;
-  }
-  92.5% {
-    color: inherit;
-    text-shadow: inherit;
-  }
-}
 </style>>
 

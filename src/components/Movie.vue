@@ -52,11 +52,6 @@ export default {
 @import "~bulma";
 @import url(//fonts.googleapis.com/css?family=Vibur);
 
-button {
-  background-color: #f5cb5c !important;
-  border-radius: 0.5rem;
-}
-
 h4 {
   text-align: left;
 }

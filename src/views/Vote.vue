@@ -1,11 +1,11 @@
 <template>
   <div class="home">
-    <VoteLogo />
+    <Logo text="Vote" />
     <div class="container" v-if="!loading">
       <h4 class="subtitle is-4 has-text-white">
         Remaining Votes: {{ MaxVotes - numberOfSelectedMovies }}
       </h4>
-      <div v-for="post in MovieData" :key="post.data.id">
+      <div v-for="post in orderedMovies" :key="post.data.id">
         <Movie
           :title="post.data.title"
           :poster-path="post.data.poster_path"
@@ -33,7 +33,7 @@
 <script>
 // @ is an alias to /src
 import Movie from "@/components/Movie.vue";
-import VoteLogo from "@/components/VoteLogo.vue";
+import Logo from "@/components/Logo.vue";
 import VoteBar from "@/components/voteBar.vue";
 import axios from "axios";
 import router from "../router/index";
@@ -45,7 +45,7 @@ export default {
   name: "Vote",
   components: {
     Movie,
-    VoteLogo,
+    Logo,
     VoteBar,
   },
     data() {
@@ -53,7 +53,15 @@ export default {
       numberOfSelectedMovies: 0,
     };
   },
-
+  computed: {
+    orderedMovies: function () {
+      let newMovies = this.MovieData;
+      return newMovies.sort((first, second ) => (first.data.title > second.data.title) ? 1: -1);
+    },
+    remainingVotes: function () {
+      return this.MaxVotes - this.numberOfSelectedMovies;
+    }
+  },
   methods: {
     async submitVotes(MovieData) {
       let MovieNames = [];
@@ -140,6 +148,7 @@ export default {
             fetchData(element.movies, element._id);
           }
         });
+        console.log(MovieData);
       });
     });
 

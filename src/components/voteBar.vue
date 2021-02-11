@@ -40,6 +40,9 @@ components: {
 }
 </script>
 
-<style>
-
+<style scoped lang="scss">
+button {
+  background-color: #f5cb5c !important;
+  border-radius: 0.5rem;
+}
 </style>
