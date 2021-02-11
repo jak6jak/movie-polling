@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const router = express.Router();
 const Poll = require('./poll')
 const axios = require('axios');
+const { io } = require('socket.io-client');
 
 router.get('/', async (req, res) => {
     try {
@@ -69,6 +70,8 @@ router.patch('/:id', async (req, res) => {
             });
             console.log(doc);
             await doc.save();
+            
+            req.io.to(req.params.id).emit('update');
             res.status(201).json(doc);
         } catch (err) {
             console.log(err.message);

@@ -1,5 +1,5 @@
 <template>
-  <Logo text="Results"/>
+  <Logo text="Results" />
   <h2 class="title has-text-white">Number Voted: {{ NumberVoted }}</h2>
   <ul>
     <div v-if="!loading">
@@ -20,30 +20,60 @@
 </template>
 
 <script>
-import Logo from '../components/Logo'
+import Logo from "../components/Logo";
 import { onMounted, ref } from "vue";
 import axios from "axios";
 axios.defaults.baseURL = process.env.APP_URL;
 import { useRoute } from "vue-router";
+import { io } from "socket.io-client";
 
 export default {
   name: "Results",
   components: {
-    Logo
+    Logo,
   },
   setup() {
     const Movies = ref([]);
     const NumberVoted = ref(0);
     const loading = ref(true);
-    onMounted(() => {
-      const route = useRoute();
 
-      axios.get(`/pollpage/${route.params.id}`).then((response) => {
-        console.log(response);
+    function fetchData(id) {
+      axios.get(`/pollpage/${id}`).then((response) => {
+        //console.log(response);
         Movies.value = response.data.movieList;
         NumberVoted.value = response.data.numberofPeopleVoted;
         loading.value = false;
       });
+    }
+
+    onMounted(() => {
+      const route = useRoute();
+      console.log(route.params.id)
+      fetchData(route.params.id);
+      
+      //console.log(process.env.VUE_APP_APP_URL);
+
+      const socket = io(process.env.VUE_APP_APP_URL, {transports: ["websocket"]});
+      //console.log(socket.connect());
+      //console.log(socket);
+      socket.on("connect", () => {
+        console.log("Hello we are connected!!!");
+        socket.emit("subscribe", route.params.id);
+        //socket.join(route.params.id);
+
+      socket.on("update", () =>{
+        console.log("time to update page!")
+        fetchData(route.params.id);
+      })
+
+      });
+      socket.on("connect_error", (err) => {
+        console.log(`connect error: ${err.Error}`);
+      });
+      socket.on("disconnect", (reason) => {
+        console.log("Reason: " + reason)
+      })
+
     });
 
     return {
